@@ -82,6 +82,19 @@ namespace Jing.ULiteWebView
             _ulite = null;
         }
 
+        public void InitGWH(int width = 0, int height = 0)
+        {
+            if (null == _ulite)
+            {
+                return;
+            }
+            if(width < 0)
+                width = Screen.width;
+            if(height < 0)
+                height = Screen.height;
+            _ulite.InitGWH(width, height);            
+        }
+
         /// <summary>
         /// 显示
         /// </summary>
@@ -247,7 +260,7 @@ namespace Jing.ULiteWebView
 
     abstract class AULite4Platform
     {
-
+        abstract public void InitGWH(int width, int height);
         /// <summary>
         /// 显示
         /// </summary>
@@ -278,6 +291,7 @@ namespace Jing.ULiteWebView
 
     }
 
+#if !UNITY_EDITOR && UNITY_ANDROID
     class ULiteAndroidWebView : AULite4Platform
     {
         AndroidJavaObject _ajo;
@@ -307,12 +321,19 @@ namespace Jing.ULiteWebView
             _ajo.Call("loadUrl", url);
         }
 
+        public override void InitGWH(int width, int height)
+        {
+            _ajo.Call("initGWH", width, height);
+        }
+
         public override void Show(int top, int bottom, int left, int right)
         {
             _ajo.Call("show", top, bottom, left, right);
         }
     }
+#endif
 
+#if !UNITY_EDITOR && UNITY_IOS
     class ULiteIosWebView : AULite4Platform
     {
         [DllImport("__Internal")]
@@ -355,5 +376,10 @@ namespace Jing.ULiteWebView
         {
             _show(top, bottom, left, right);
         }
+
+        public override void InitGWH(int width, int height)
+        {            
+        }
     }
+#endif
 }
