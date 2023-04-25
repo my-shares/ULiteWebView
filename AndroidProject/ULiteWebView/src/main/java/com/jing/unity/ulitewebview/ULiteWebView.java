@@ -32,6 +32,8 @@ public class ULiteWebView {
     int _left;
 
     int _right;
+    double _GSWidth;
+    double _GSHeight;
 
     String _url;
 
@@ -147,6 +149,11 @@ public class ULiteWebView {
         _gameObjectName = gameObjectName;
     }
 
+    public void initGWH(int width,int height)
+    {
+        this._GSWidth = width;
+        this._GSHeight = height;
+    }
 
     /***
      * 显示WebView
@@ -184,6 +191,15 @@ public class ULiteWebView {
                 manager.getDefaultDisplay().getRealMetrics(outMetrics);
                 int screenW = outMetrics.widthPixels;
                 int screenH = outMetrics.heightPixels;
+                if(_GSWidth > 0 && _GSHeight > 0)
+                {
+                    double _rateW = screenW / _GSWidth;
+                    double _rateH = screenH/ _GSHeight;
+                    _left = (int)(_left * _rateW);
+                    _right = (int)(_right * _rateW);
+                    _top = (int)(_top * _rateH);
+                    _bottom = (int)(_bottom * _rateH);
+                }
 
                 Log.i("ULiteWebView", String.format("屏幕宽高 [w:%d , h:%d]", screenW, screenH));
                 Log.i("ULiteWebView", String.format("展示参数 [T:%d , B:%d , L:%d , R:%d]", _top, _bottom, _left, _right));
